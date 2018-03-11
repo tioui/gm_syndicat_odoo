@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_intervention_form_from_list" model="ir.ui.view">
+			<field name="name">intervention.form</field>
+            <field name="model">gm_syndicat.intervention</field>
+            <field name="arch" type="xml">
+                <form string="Intervention">
+                   <sheet>
+                    <group>
+						<field name="name"/>
+						<field name="date"/>
+                    </group>
+                    <group>
+						<notebook>
+							<page string="Description">
+								<group col="1">
+    	    	                    <field name="description" nolabel="1"/>
+                		        </group>
+							</page>
+							<page string="Pièces jointes">
+								<group col="1">
+									<field name="attachment_ids" nolabel="1"/>
+								</group>
+							</page>
+						</notebook>
+                    </group>
+                  </sheet>
+				  <footer invisible="context.get('in_form', False) in [False]">
+					<button string="Enregistrer" type="object" name="close"/>
+					<button string="Annuler" type="object" name="close" special="cancel"/>
+				  </footer>
+                </form>
+            </field>
+        </record>
+
+
+	<record model="ir.actions.act_window" id="intervention_form_action">
+	    <field name="name">intervention.form.action</field>
+	    <field name="res_model">gm_syndicat.intervention</field>
+	    <field name="view_mode">form</field>
+	    <field name="view_id" ref="view_intervention_form_from_list"/>
+		<field name="context">{'default_member_id': context.get('member_id', False), 'in_form': True}</field>
+		<field name="target">new</field>
+	</record>
+
+        <record id="view_intervention_form" model="ir.ui.view">
+			<field name="name">intervention.form</field>
+            <field name="model">gm_syndicat.intervention</field>
+            <field name="arch" type="xml">
+                <form string="Intervention">
+                   <sheet>
+                    <group>
+						<field name="name"/>
+						<field name="date"/>
+                    </group>
+                    <group>
+						<notebook>
+							<page string="Description">
+								<group col="1">
+    	    	                    <field name="description" nolabel="1"/>
+                		        </group>
+							</page>
+							<page string="Pièces jointes">
+								<group col="1">
+									<field name="attachment_ids" nolabel="1"/>
+								</group>
+							</page>
+						</notebook>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_intervention_attachment_form" model="ir.ui.view">
+			<field name="name">intervention_attachment.form</field>
+            <field name="model">gm_syndicat.intervention_attachment</field>
+            <field name="arch" type="xml">
+                <form string="Attachments">
+                   <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="view_member_attachment_form" model="ir.ui.view">
+			<field name="name">member_attachment.form</field>
+            <field name="model">gm_syndicat.member_attachment</field>
+            <field name="arch" type="xml">
+                <form string="Attachments">
+                   <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="member_form_view">
+            <field name="name">member.form</field>
+            <field name="model">gm_syndicat.member</field>
+            <field name="arch" type="xml">
+                <form string="Formulaire de membre">
+					<header>
+						<!--<button string="Nouvel intervention" type="object" name="new_intervention"/>-->
+						<button string="Nouvel intervention" type="action" name="%(intervention_form_action)d" context="{'member_id': id}"/>
+					</header>
+                    <sheet>
+                        <group col="2">
+								<field name="name"/>
+								<field name="first_name"/>
+						</group>
+						<group col="6">
+							<field name="gender"/>
+							<field name="date_of_birth"/>
+							<field name="employee_id"/>
+						</group>
+						<group>
+							<field name="address"/>
+							<field name="city_id"/>
+							<field name="postal_code"/>
+							<field name="phone_number"/>
+							<field name="email"/>
+						</group>
+						<group col= "4">
+							<field name="is_member"/>
+							<field name="is_regular"/>
+							<field name="is_continuing_education"/>
+							<field name="is_permanent"/>
+						</group>
+						<group col="2">
+							<group col="2">
+								<field name="status"/>
+								<field name="years_of_schooling"/>
+								<field name="years_of_service"/>
+								<field name="experience"/>
+								<field name="salary_grade"/>
+								<field name="workload"/>
+							</group>
+							<group col="1">
+								<field name="discipline_ids"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Commentaires">
+								<group col="1">
+    	    	                    <field name="comment" nolabel="1"/>
+                		        </group>
+							</page>
+							<page string="Pièces jointes">
+								<group col="2">
+									<group col="1">
+										<field name="attachment_ids"/>
+									</group>
+									<group col="1">
+										<field name="intervention_attachment_ids"/>
+									</group>
+								</group>
+							</page>
+							<page string="Interventions">
+								<group col="1">
+									<field name="intervention_ids" nolabel="1"/>
+								</group>
+							</page>
+						</notebook>
+                        <group name="creator" string="Créateur">
+                            <field name="creator_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="member_tree_view">
+            <field name="name">member.tree</field>
+            <field name="model">gm_syndicat.member</field>
+            <field name="arch" type="xml">
+				<tree string="Membres">
+					<field name="full_name"/>
+					<field name="employee_id"/>
+					<field name="is_member"/>
+					<field name="is_regular"/>
+					<field name="is_continuing_education"/>
+					<field name="experience"/>
+					<field name="full_address"/>
+				</tree>
+
+            </field>
+        </record>
+
+
+        <record id="view_member_filter" model="ir.ui.view">
+            <field name="name">member.select</field>
+            <field name="model">gm_syndicat.member</field>
+            <field name="arch" type="xml">
+                <search string="Chercher des membres">
+                    <field name="name"/>
+                    <field name="first_name"/>
+                    <field name="employee_id"/>
+                    <field name="full_city"/>
+                    <field name="status"/>
+               </search>
+            </field>
+        </record>
+        <!-- window action -->
+        <!--
+            The following tag is an action definition for a "window action",
+            that is an action opening a view or a set of views
+        -->
+        <record model="ir.actions.act_window" id="member_list_action">
+            <field name="name">Membre</field>
+            <field name="res_model">gm_syndicat.member</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_member_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Créer le premier membre</p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="intervention_action">
+            <field name="name">Intervention</field>
+            <field name="res_model">gm_syndicat.intervention</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <!-- top level menu: no parent -->
+        <menuitem id="main_gm_syndicat_menu" name="Gestion des membres (Syndicat)"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+        <menuitem id="gm_syndicat_menu" name="Gestion des membres (syndicat)"
+                  parent="main_gm_syndicat_menu"/>
+        <!-- the following menuitem should appear *after*
+             its parent openacademy_menu and *after* its
+             action course_list_action -->
+        <menuitem id="members_menu" name="Membres" parent="gm_syndicat_menu"
+                  action="member_list_action"/>
+        <!-- Full id location:
+             action="openacademy.course_list_action"
+             It is not required when it is the same module -->
+    </data>
+</openerp>

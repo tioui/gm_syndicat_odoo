@@ -1,0 +1,8 @@
+<openerp>
+    <data>
+		<record model="gm_syndicat" id="membre0">
+			<field name="name">Membre0</field>
+			<field name="description">Um membre</field>
+		</record>
+    </data>
+</openerp>
