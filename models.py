@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
+# =============================================================================
+# title           :models.py
+# description     :Classes used in the gm_syndicat addon
+# author          :Louis Marchand
+# date            :20180301
+# version         :0.1
+# notes           :
+# python_version  :2.7.12
+# =============================================================================
+
 
 from openerp import models, fields, api, _
 
 class Member(models.Model):
+    """Represent a member of the syndicate"""
     _name = 'gm_syndicat.member'
 
     name = fields.Char(string="Nom", required=True)
@@ -51,10 +62,14 @@ class Member(models.Model):
 
     @api.depends('name', 'first_name')
     def _full_name(self):
+        """Setting `full_name' attribute using `name' and `first_name'"""
         for la_object in self:
             la_object.full_name = la_object.first_name + ' ' + la_object.name
 
     def _get_full_city(self,a_object):
+        """
+            Full city name using the `city', `province' and `country' names.
+        """
         l_value = ""
         if a_object.city_id:
             l_value = a_object.city_id.name_with_province
@@ -62,6 +77,10 @@ class Member(models.Model):
 
     @api.multi
     def _full_address(self):
+        """
+            Setting `full_address' with `address', `city', `province' and
+            `country'.
+        """
         for la_object in self:
             l_value = ""
             if la_object.address:
@@ -71,11 +90,18 @@ class Member(models.Model):
 
     @api.multi
     def _full_city(self):
+        """
+            Setting `full_city' name using `city', province and country names.
+        """
         for la_object in self:
             la_object.full_city = self._get_full_city(la_object)
 
     @api.depends('intervention_ids')
     def _intervention_attachment_ids(self):
+        """
+            Setting a list of every attachment of every `intervention_ids'
+            in `intervention_attachment_ids'
+        """
         for la_object in self:
             ids = None
             for la_intervention in la_object.intervention_ids:
@@ -85,24 +111,10 @@ class Member(models.Model):
                     ids = la_intervention.attachment_ids
             la_object.intervention_attachment_ids = ids
 
-    @api.multi
-    def new_intervention(self):
-        res = {
-           'type': 'ir.actions.act_window',
-           'name': _('gm_syndicat.member.intervention'),
-           'res_model': 'gm_syndicat.intervention',
-           'view_type': 'form',
-           'view_mode': 'form',
-           'view_id': False,
-           'nodestroy': False,
-           'target': 'new',
-           'flags': {'form': {'action_buttons': True}},
-           'context':{'default_member_id': self.id}
-        }
-    
-        return res
-
 class City(models.Model):
+    """
+        An address city.
+    """
     _name = 'gm_syndicat.city'
 
     name = fields.Char(string="Nom", require=True)
@@ -114,12 +126,19 @@ class City(models.Model):
 
     @api.multi
     def _name_with_province(self):
+        """
+            Setting `name_with_province' with the names of `self',
+            province and country
+        """
         for la_object in self:
             la_object.name_with_province = la_object.name + ", " + \
                 la_object.province_id.name + ", " +\
                 la_object.province_id.country_id.name
 
 class Province(models.Model):
+    """
+        A province to be used in addresses.
+    """
     _name = 'gm_syndicat.province'
 
     name = fields.Char(string="Nom", require=True)
@@ -127,22 +146,34 @@ class Province(models.Model):
                     store=True)
 
 class Discipline(models.Model):
+    """
+        Teaching domain.
+    """
     _name = 'gm_syndicat.discipline'
 
     name = fields.Char(string="Nom", require=True)
     number = fields.Integer(string="Numéro", require=True)
 
 class Member_attachment(models.Model):
+    """
+        File attachment of a member.
+    """
     _name = 'gm_syndicat.member_attachment'
     member_id = fields.Many2one('gm_syndicat.member', string="Membre")
     _inherit = 'ir.attachment'
 
 class Intervention_attachment(models.Model):
+    """
+        File attachment of an Intervention
+    """
     _name = 'gm_syndicat.intervention_attachment'
     intervention_id = fields.Many2one('gm_syndicat.intervention', string="Intervention")
     _inherit = 'ir.attachment'
 
 class Intervention(models.Model):
+    """
+        An intervention with a Member.
+    """
     _name = 'gm_syndicat.intervention'
     name = fields.Char(string="Description courte", required=True)
     date = fields.Date(string="Date", required=True)
@@ -156,4 +187,7 @@ class Intervention(models.Model):
 
     @api.multi
     def close(self):
+        """
+            Use when closing a form for `self'
+        """
         return {'type': 'ir.actions.act_window_close'}

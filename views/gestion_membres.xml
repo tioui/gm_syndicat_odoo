@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Description: Views used in the gm_syndicat odoo addon
+	Author: Louis Marchand
+	Date: Sun, 11 Mar 2018 16:02:26 +0000
+	Version: 0.1
+-->
 <openerp>
     <data>
 
@@ -44,35 +50,6 @@
 		<field name="context">{'default_member_id': context.get('member_id', False), 'in_form': True}</field>
 		<field name="target">new</field>
 	</record>
-
-        <record id="view_intervention_form" model="ir.ui.view">
-			<field name="name">intervention.form</field>
-            <field name="model">gm_syndicat.intervention</field>
-            <field name="arch" type="xml">
-                <form string="Intervention">
-                   <sheet>
-                    <group>
-						<field name="name"/>
-						<field name="date"/>
-                    </group>
-                    <group>
-						<notebook>
-							<page string="Description">
-								<group col="1">
-    	    	                    <field name="description" nolabel="1"/>
-                		        </group>
-							</page>
-							<page string="Pièces jointes">
-								<group col="1">
-									<field name="attachment_ids" nolabel="1"/>
-								</group>
-							</page>
-						</notebook>
-                    </group>
-                  </sheet>
-                </form>
-            </field>
-        </record>
 
         <record id="view_intervention_attachment_form" model="ir.ui.view">
 			<field name="name">intervention_attachment.form</field>

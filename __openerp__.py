@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+# =============================================================================
+# title           :__openerp__.py
+# description     :Manifest file for the gm_syndicat addon
+# author          :Louis Marchand
+# date            :20180301
+# version         :0.1
+# notes           :
+# python_version  :2.7.12
+# =============================================================================
+
+
 {
     'name': "Gestion des membres (Syndicat)",
 
