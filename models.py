@@ -19,6 +19,7 @@ class Member(models.Model):
     name = fields.Char(string="Nom", required=True)
     first_name = fields.Char(string="Prenom", required=True)
     employee_id = fields.Integer(string="Numéro d'employé")
+    is_active = fields.Boolean(string="Actif", default=True)
     is_member = fields.Boolean(string="Membre")
     is_regular = fields.Boolean(string="Formation régulière")
     is_continuing_education = fields.Boolean(string="Formation continue")
@@ -39,7 +40,7 @@ class Member(models.Model):
     gender = fields.Selection([('male', 'Homme'), ('female', 'Femme'),
         ('other', 'Autre')], 'Sexe', required=True)
     status = fields.Selection([('full_time', 'Temps plein'), ('part_time', 'Temps partiel'),
-        ('lecturer', 'Chargé de cours')], 'Statut')
+        ('lecturer', 'Chargé de cours'), ('retired', 'Retraité')], 'Statut')
     date_of_birth = fields.Date(string="Date de naissance")
     comment = fields.Text(string="Commentaires")
     attachment_ids = fields.One2many('gm_syndicat.member_attachment',
