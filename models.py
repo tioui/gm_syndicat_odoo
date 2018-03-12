@@ -56,7 +56,7 @@ class Member(models.Model):
             default= lambda self: self.env.user.id,
             readonly=True, ondelete="set null")
 
-    full_name = fields.Char(string="Nom complet", compute='_full_name')
+    full_name = fields.Char(string="Nom complet", compute='_full_name', store=True)
     full_address = fields.Char(string="Adresse complète", compute='_full_address')
     full_city = fields.Char(string="Ville complète", compute='_full_city')
 
@@ -64,7 +64,7 @@ class Member(models.Model):
     def _full_name(self):
         """Setting `full_name' attribute using `name' and `first_name'"""
         for la_object in self:
-            la_object.full_name = la_object.first_name + ' ' + la_object.name
+            la_object.full_name = la_object.name + ", " + la_object.first_name
 
     def _get_full_city(self,a_object):
         """
