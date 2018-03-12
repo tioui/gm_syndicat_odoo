@@ -251,6 +251,7 @@
 					<field name="is_regular"/>
 					<field name="is_continuing_education"/>
 					<field name="experience"/>
+					<field name="discipline_ids"/>
 					<field name="full_address"/>
 				</tree>
             </field>
