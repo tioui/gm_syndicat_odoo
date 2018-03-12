@@ -119,6 +119,51 @@
             </field>
         </record>
 
+
+		<record model="ir.ui.view" id="city_form_view">
+            <field name="name">city.form</field>
+            <field name="model">gm_syndicat.city</field>
+            <field name="arch" type="xml">
+                <form string="Formulaire de ville">
+                    <sheet>
+                        <group col="2">
+								<field name="name"/>
+								<field name="province_id"/>
+						</group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="province_form_view">
+            <field name="name">province.form</field>
+            <field name="model">gm_syndicat.province</field>
+            <field name="arch" type="xml">
+                <form string="Formulaire de province">
+                    <sheet>
+                        <group col="2">
+								<field name="name"/>
+								<field name="country_id"/>
+						</group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="discipline_form_view">
+            <field name="name">discipline.form</field>
+            <field name="model">gm_syndicat.discipline</field>
+            <field name="arch" type="xml">
+                <form string="Formulaire de discipline">
+                    <sheet>
+                        <group col="2">
+								<field name="number"/>
+								<field name="name"/>
+						</group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+
 		<record model="ir.ui.view" id="member_form_view">
             <field name="name">member.form</field>
             <field name="model">gm_syndicat.member</field>
@@ -206,9 +251,38 @@
 					<field name="experience"/>
 					<field name="full_address"/>
 				</tree>
-
             </field>
         </record>
+		<record model="ir.ui.view" id="city_tree_view">
+            <field name="name">city.tree</field>
+            <field name="model">gm_syndicat.city</field>
+            <field name="arch" type="xml">
+				<tree string="Villes">
+					<field name="name_with_province"/>
+				</tree>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="province_tree_view">
+            <field name="name">province.tree</field>
+            <field name="model">gm_syndicat.province</field>
+            <field name="arch" type="xml">
+				<tree string="Provinces">
+					<field name="name_with_country"/>
+				</tree>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="discipline_tree_view">
+            <field name="name">discipline.tree</field>
+            <field name="model">gm_syndicat.discipline</field>
+            <field name="arch" type="xml">
+				<tree string="Discipline">
+					<field name="number"/>
+					<field name="name"/>
+				</tree>
+            </field>
+        </record>
+
+
 
 
         <record id="view_member_filter" model="ir.ui.view">
@@ -224,6 +298,39 @@
                </search>
             </field>
         </record>
+        <record id="view_city_filter" model="ir.ui.view">
+            <field name="name">city.select</field>
+            <field name="model">gm_syndicat.city</field>
+            <field name="arch" type="xml">
+                <search string="Chercher des villes">
+                    <field name="name"/>
+                    <field name="province_id"/>
+                    <field name="country_id"/>
+               </search>
+            </field>
+        </record>
+        <record id="view_province_filter" model="ir.ui.view">
+            <field name="name">province.select</field>
+            <field name="model">gm_syndicat.province</field>
+            <field name="arch" type="xml">
+                <search string="Chercher des provinces">
+                    <field name="name"/>
+                    <field name="country_id"/>
+               </search>
+            </field>
+        </record>
+        <record id="view_discipline_filter" model="ir.ui.view">
+            <field name="name">discipline.select</field>
+            <field name="model">gm_syndicat.discipline</field>
+            <field name="arch" type="xml">
+                <search string="Chercher des disciplines">
+                    <field name="name"/>
+                    <field name="number"/>
+               </search>
+            </field>
+        </record>
+
+
         <!-- window action -->
         <!--
             The following tag is an action definition for a "window action",
@@ -239,6 +346,38 @@
                 <p class="oe_view_nocontent_create">Créer le premier membre</p>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="city_list_action">
+            <field name="name">Ville</field>
+            <field name="res_model">gm_syndicat.city</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_city_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Créer la première ville</p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="province_list_action">
+            <field name="name">Province</field>
+            <field name="res_model">gm_syndicat.province</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_province_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Créer la première province</p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="discipline_list_action">
+            <field name="name">Discipline</field>
+            <field name="res_model">gm_syndicat.discipline</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_discipline_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Créer la première discipline</p>
+            </field>
+        </record>
+
+
 
         <record model="ir.actions.act_window" id="intervention_action">
             <field name="name">Intervention</field>
@@ -253,11 +392,19 @@
              before using action= attribute -->
         <menuitem id="gm_syndicat_menu" name="Gestion des membres (syndicat)"
                   parent="main_gm_syndicat_menu"/>
+        <menuitem id="gm_syndicat_model_menu" name="Modèles"
+                  parent="main_gm_syndicat_menu"/>
         <!-- the following menuitem should appear *after*
              its parent openacademy_menu and *after* its
              action course_list_action -->
         <menuitem id="members_menu" name="Membres" parent="gm_syndicat_menu"
                   action="member_list_action"/>
+        <menuitem id="cities_menu" name="Villes" parent="gm_syndicat_model_menu"
+                  action="city_list_action"/>
+        <menuitem id="province_menu" name="Provinces" parent="gm_syndicat_model_menu"
+                  action="province_list_action"/>
+        <menuitem id="discipline_menu" name="Disciplines" parent="gm_syndicat_model_menu"
+                  action="discipline_list_action"/>
         <!-- Full id location:
              action="openacademy.course_list_action"
              It is not required when it is the same module -->

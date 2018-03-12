@@ -120,9 +120,19 @@ class City(models.Model):
     name = fields.Char(string="Nom", require=True)
     province_id = fields.Many2one('gm_syndicat.province',
             string='Province', ondelete="cascade", required=True)
-    name_with_province = fields.Char(string="Province complète",
+    country_id = fields.Many2one('res.country', string="Pays",
+            compute='_country_id')
+    name_with_province = fields.Char(string="Ville complète",
             compute='_name_with_province')
     _rec_name = 'name_with_province'
+
+    @api.depends('province_id')
+    def _country_id(self):
+        """
+            Setting `country_id' using the `province_id'
+        """
+        for la_object in self:
+            la_object.country_id = la_object.province_id.country_id
 
     @api.multi
     def _name_with_province(self):
@@ -143,7 +153,19 @@ class Province(models.Model):
 
     name = fields.Char(string="Nom", require=True)
     country_id = fields.Many2one('res.country', string='Country',
-                    store=True)
+                    store=True, ondelete="cascade")
+    name_with_country = fields.Char(string="Province complète",
+            compute='_name_with_country')
+    _rec_name = 'name_with_country'
+    @api.multi
+    def _name_with_country(self):
+        """
+            Setting `name_with_country' with the `country_id'
+        """
+        for la_object in self:
+            la_object.name_with_country = la_object.name + ", " + \
+                la_object.country_id.name
+
 
 class Discipline(models.Model):
     """
@@ -159,7 +181,7 @@ class Member_attachment(models.Model):
         File attachment of a member.
     """
     _name = 'gm_syndicat.member_attachment'
-    member_id = fields.Many2one('gm_syndicat.member', string="Membre")
+    member_id = fields.Many2one('gm_syndicat.member', string="Membre", ondelete="cascade")
     _inherit = 'ir.attachment'
 
 class Intervention_attachment(models.Model):
@@ -167,7 +189,7 @@ class Intervention_attachment(models.Model):
         File attachment of an Intervention
     """
     _name = 'gm_syndicat.intervention_attachment'
-    intervention_id = fields.Many2one('gm_syndicat.intervention', string="Intervention")
+    intervention_id = fields.Many2one('gm_syndicat.intervention', string="Intervention", ondelete="cascade")
     _inherit = 'ir.attachment'
 
 class Intervention(models.Model):
@@ -182,7 +204,7 @@ class Intervention(models.Model):
             'intervention_id', string="Pièces jointes")
     creator_id = fields.Many2one('res.users', string="Créateur",
             default= lambda self: self.env.user.id,
-            readonly=True, ondelete="set null")
+            readonly=True, ondelete="cascade")
     member_id = fields.Many2one('gm_syndicat.member', string="Membre")
 
     @api.multi
