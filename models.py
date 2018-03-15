@@ -156,7 +156,7 @@ class Province(models.Model):
     country_id = fields.Many2one('res.country', string='Country',
                     store=True, ondelete="cascade")
     name_with_country = fields.Char(string="Province complète",
-            compute='_name_with_country')
+            compute='_name_with_country', store=True)
     _rec_name = 'name_with_country'
     @api.multi
     def _name_with_country(self):

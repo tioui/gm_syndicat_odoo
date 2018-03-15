@@ -260,7 +260,8 @@
             <field name="model">gm_syndicat.city</field>
             <field name="arch" type="xml">
 				<tree string="Villes">
-					<field name="name_with_province"/>
+					<field name="name"/>
+					<field name="province_id"/>
 				</tree>
             </field>
         </record>
@@ -295,7 +296,7 @@
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="employee_id"/>
-                    <field name="full_city"/>
+                    <field name="city_id"/>
                     <field name="status"/>
                </search>
             </field>
