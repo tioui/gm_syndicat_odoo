@@ -58,8 +58,8 @@ class Member(models.Model):
             readonly=True, ondelete="set null")
 
     full_name = fields.Char(string="Nom complet", compute='_full_name', store=True)
-    full_address = fields.Char(string="Adresse complète", compute='_full_address')
-    full_city = fields.Char(string="Ville complète", compute='_full_city')
+    full_address = fields.Char(string="Adresse complète", compute='_full_address', store=True)
+    full_city = fields.Char(string="Ville complète", compute='_full_city', store=True)
 
     @api.depends('name', 'first_name')
     def _full_name(self):
@@ -76,7 +76,7 @@ class Member(models.Model):
             l_value = a_object.city_id.name_with_province
         return l_value
 
-    @api.multi
+    @api.depends('address', 'full_city')
     def _full_address(self):
         """
             Setting `full_address' with `address', `city', `province' and
@@ -89,7 +89,7 @@ class Member(models.Model):
             l_value = l_value + self._get_full_city(la_object)
             la_object.full_address = l_value.strip(" ,")
 
-    @api.multi
+    @api.depends('address', 'city_id', 'city_id.name_with_province')
     def _full_city(self):
         """
             Setting `full_city' name using `city', province and country names.
@@ -124,10 +124,10 @@ class City(models.Model):
     country_id = fields.Many2one('res.country', string="Pays",
             compute='_country_id')
     name_with_province = fields.Char(string="Ville complète",
-            compute='_name_with_province')
+            compute='_name_with_province', store=True)
     _rec_name = 'name_with_province'
 
-    @api.depends('province_id')
+    @api.depends('province_id', 'province_id.country_id')
     def _country_id(self):
         """
             Setting `country_id' using the `province_id'
@@ -135,7 +135,7 @@ class City(models.Model):
         for la_object in self:
             la_object.country_id = la_object.province_id.country_id
 
-    @api.multi
+    @api.depends('name', 'province_id', 'province_id.country_id', 'province_id.country_id.name')
     def _name_with_province(self):
         """
             Setting `name_with_province' with the names of `self',
@@ -158,7 +158,7 @@ class Province(models.Model):
     name_with_country = fields.Char(string="Province complète",
             compute='_name_with_country', store=True)
     _rec_name = 'name_with_country'
-    @api.multi
+    @api.depends('name', 'country_id', 'country_id.name')
     def _name_with_country(self):
         """
             Setting `name_with_country' with the `country_id'

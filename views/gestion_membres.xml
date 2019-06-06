@@ -170,8 +170,8 @@
             <field name="arch" type="xml">
                 <form string="Formulaire de membre">
 					<header>
-						<!--<button string="Nouvel intervention" type="object" name="new_intervention"/>-->
-						<button string="Nouvel intervention" type="action" name="%(intervention_form_action)d" context="{'member_id': id}"/>
+						<!--<button string="Nouvelle intervention" type="object" name="new_intervention"/>-->
+						<button string="Nouvelle intervention" type="action" name="%(intervention_form_action)d" context="{'member_id': id}"/>
 					</header>
                     <sheet>
                         <group col="2">
